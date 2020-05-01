@@ -1,12 +1,12 @@
 {
-  "name": "meng0096_hw06",
+  "name": "carl5362_hw06",
   "version": "1.0.0",
   "description": "Assignment 6",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "meng0096",
+  "author": "carl5362",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.0",

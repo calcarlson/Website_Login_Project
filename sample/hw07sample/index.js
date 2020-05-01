@@ -50,8 +50,7 @@ fs.readFile(__dirname + "/dbconfig.xml", function(err, data) {
   });
 });
 // server listens on port 9007 for incoming connections
-app.listen(9096, () => console.log("Listening on port 9007!"));
-
+app.listen(9362, () => console.log("Listening on port 9362!"));
 app.get("/", function(req, res) {
   res.sendFile(__dirname + "/client/welcome.html");
 });
