@@ -20,7 +20,7 @@ app.use(session({
 app.listen(9362, () => console.log('Listening on port 9362!'));
 
 var parser = new xml2js.Parser();
-fs.readFile(__dirname + '/dbconfig-1.xml', function(err, data) {
+fs.readFile(__dirname + '/dbconfig.xml', function(err, data) {
     parser.parseString(data, function(err, result) {
         con = mysql.createConnection({
             host: result.dbconfig.host[0],

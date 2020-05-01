@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<title>Welcome to Node.js</title>
+</head>
+<style>
+	.loginForm {
+		width: 80%;
+	}
+
+	.login_box {
+		text-align: center;
+	}
+
+	.errorFormat{
+		background-color: red;
+		display: none;
+		width: 80%;
+		text-align: center;
+	}
+</style>
+
+<body>
+	<div class="jumbotron" style="background: DarkSeaGreen !important">
+		<h1>LOGIN PAGE</h1>
+		<p>Please Enter in your user name and password. Both are case sensitive:</p>
+	</div>
+	<div id="error" class = "errorFormat">Thats wrong Bro</div>
+	<div id="error1" class = "errorFormat">Missing Username</div>
+	<div id="error2" class = "errorFormat">Missing Password</div>
+	<div id="error3" class = "errorFormat">Missing Password and Username</div>
+
+	<form class="login_box" name="login" >
+		<div>
+			<label for="uname" class = "text"><b>UserName:</b></label>
+			<br>
+			
+			<input type="text" placeholder="Enter Username" name="uname" class = "loginForm" required>
+      </div>
+			<br>
+			<br>
+			<div>
+				<label for="psw" class = "text"><b>Password</b></label>
+				<br>
+				<input type="password" placeholder="Enter Password" name="psw" class = "loginForm" required>
+        </div>
+				<br>
+				<input type="button" class = "loginForm" value = "LOGIN" onclick = "getStuff(uname.value, psw.value)">
+	</form>
+	<script type="text/javascript">
+	var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            var data = this.responseText; 
+			evaluate(JSON.parse(data));
+        }
+    };
+    
+    function evaluate(data) {
+      if(data.Stuff == true) {
+        location.replace("/contact");
+      }
+      else {
+		  document.getElementById("error").style.display = "block";
+      }
+    }
+    function reset() {
+		document.getElementById("error").style.display = "none";
+		document.getElementById("error1").style.display = "none";
+		document.getElementById("error2").style.display = "none";
+		document.getElementById("error3").style.display = "none";
+	}
+    function getStuff(name, password){
+		reset();
+		if (!name && !password) {
+			document.getElementById("error3").style.display = "block";
+		} else if (!name) {
+		  document.getElementById("error1").style.display = "block";
+		} else if (!password) {
+			document.getElementById("error2").style.display = "block";
+		} else {
+			xhttp.open("POST", "/sendLoginDetails");
+			xhttp.setRequestHeader("Content-Type", "application/json");
+			xhttp.send(JSON.stringify({Username: name, Password: password}));
+		}	
+	}
+	</script>
+</body>
+
+</html>
