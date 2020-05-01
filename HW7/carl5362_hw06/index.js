@@ -32,11 +32,11 @@ fs.readFile(__dirname + '/dbconfig.xml', function(err, data) {
     });
 });
 
-app.get('/admin', function(req, res) {
+app.get('/Admin', function(req, res) {
     if (!req.session.username) {
         res.redirect('/login');
     } else {
-        res.sendFile(__dirname + '/client/admin.html');
+        res.sendFile(__dirname + '/client/adminpage.html');
     }
 });
 

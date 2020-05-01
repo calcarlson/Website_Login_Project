@@ -24,7 +24,7 @@ con.connect(function(err) {
     var Values = {
         acc_name: 'charlie', // replace with acc_name chosen by you OR retain the same value
         acc_login: 'charlie', // replace with acc_login chosen by you OR retain the same vallue
-        acc_password: "tango", //crypto.createHash('sha256').update("tango").digest('base64') // replace with acc_password chosen by you OR retain the same value
+        acc_password: crypto.createHash('sha256').update("tango").digest('base64'), // replace with acc_password chosen by you OR retain the same value
     };
 
     var sql = ``;

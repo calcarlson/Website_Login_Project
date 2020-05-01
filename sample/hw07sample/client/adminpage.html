@@ -114,8 +114,6 @@
       console.log("function()");
 
       $.get("userLogin").done(function(response) {
-		  console.log(response);
-		  response = JSON.parse(response);
         document.getElementById("userName").innerHTML = "Welcome " + response.login + "!";
       });
 
@@ -129,10 +127,10 @@
     // dynamically appends the list of users to the table
     function fetchAllUsers() {
       console.log("function fetchAllUsers()");
-      var url = "getListOfUsers";
+      var url = "getUsers";
 
       $.get(url).done(function(response) {
-        formTable(response.account);
+        formTable(response.res.userList);
       });
 
       function formTable(response) {
@@ -194,7 +192,7 @@
 
       if(modeOfUse === "Insert") {
         // call the API to add the details of a new user
-        $.post("postUser", {
+        $.post("addUser", {
             name: tdName.children("input[type=text]").val(),
             login: tdLogin.children("input[type=text]").val(),
             password: tdPassword.children("input[type=text]").val()
@@ -202,7 +200,6 @@
             if(data.flag == true) {
               // no other user exists with the login entered by user
               var userId = data.id;
-              console.log(userId);
               tdId.html(userId);
               tdName.html(tdName.children("input[type=text]").val());
               tdLogin.html(tdLogin.children("input[type=text]").val());
@@ -221,7 +218,7 @@
         });
       } else {
         // call the API to update the details of an existing user
-        $.post("updateUsers", {
+        $.post("updateUser", {
             id: event.data.oldId,
             name: tdName.children("input[type=text]").val(),
             login: tdLogin.children("input[type=text]").val(),
@@ -281,7 +278,7 @@
       var tdLogin = parentVar.children("td:nth-child(3)");
       console.log(tdLogin.html());
       console.log(tdLogin);
-      $.post("deleteUsers", {
+      $.post("deleteUser", {
           login: tdLogin.html()
         }).done(function(data) {
           if(data.flag == true) {

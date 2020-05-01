@@ -1,4 +1,5 @@
-<html>
+<!doctype html>
+<html lang="en">
 
 <head>
     <meta charset="utf-8">
@@ -6,59 +7,31 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <style>
-      .navbar {
-        background-color: #563d7c;
-      }
-      .navbar-default .navbar-nav li a{
-        color: #eee;
-      }
-      .navbar-default .navbar-nav li a:hover{
-        color: white;
-      }
-      th, td{
-        text-align: center;
-      }
-      thead {
-        background-color: #e57373;
-    color: white;
-      }
-
-       p {
-          display: block;
-          color: white;
-          text-align: center;
-          padding: 10px;
-          text-decoration: underline;
-          float: right;
-          font-weight: bold;
-      }
-</style>
+    <link rel="stylesheet" type="text/css" href="client/css/style.css">
+    <title>Add Contact</title>
 </head>
+
 
 <body>
     <nav class="navbar navbar-default">
         <div class="container-fluid">
-          <ul class="nav navbar-nav">
-              <li><a href="/"><b>Home</b></a></li>
-              <li><a href="/contact"><b>Contact</b></a></li>
-              <li><a href="/addContact"><b>Add Contact</b></a></li>
-              <li><a href="/stock"><b>Stock Page</b></a></li>
-              <li><a href="/admin"><b>Admin</b></a></li>
-              <li><a href="/logout">
-                  <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
-                  </a>
-              </li>
-
-          </ul>
-              <p id="userName">Welcome</p>
+            <ul class="nav navbar-nav">
+                <li><a href="/Contact"><b>Contacts</b></a></li>
+                <li><a href="/AddContacts"><b>Add Contacts</b></a></li>
+                <li><a href="/Stocks"><b>Stocks</b></a></li>
+                <li><a href="/logout"><b>Logout</b></a></li>
+            </ul>
         </div>
-    </nav><br><br><br>
+    </nav>
+
     <div class="container">
 
         <div class="row">
-            <p><br /></p>
+            <p>
+                <br/>
+            </p>
         </div>
+
         <div class="row">
             <div class="col-md-4"></div>
             <div class="col-md-4">
@@ -67,38 +40,43 @@
                         <p></p>
                         <table class="table table-bordered table-hover">
                             <tbody>
+
                                 <tr>
                                     <td class="col-md-6">Name</td>
                                     <td class="col-md-6">
                                         <div class="form-group">
-                                            <input type="text" class="form-control" name="contactName" required maxlength="30">
+                                            <input type="text" class="form-control" name="name" required maxlength="15">
                                         </div>
                                     </td>
                                 </tr>
+
                                 <tr>
                                     <td class="col-md-6">Email</td>
                                     <td class="col-md-6">
                                         <div class="form-group">
-                                            <input type="email" class="form-control" name="email" required maxlength="30">
+                                            <input type="text" class="form-control" name="email" required maxlength="30">
                                         </div>
                                     </td>
                                 </tr>
+
                                 <tr>
                                     <td class="col-md-6">Address</td>
                                     <td class="col-md-6">
                                         <div class="form-group">
-                                            <input type="text" class="form-control" name="address" required maxlength="100">
+                                            <input type="text" class="form-control" name="address" required maxlength="30">
                                         </div>
                                     </td>
                                 </tr>
+
                                 <tr>
                                     <td class="col-md-6">Phone Number</td>
                                     <td class="col-md-6">
                                         <div class="form-group">
-                                            <input type="text" class="form-control" name="phoneNumber" required maxlength="30">
+                                            <input type="text" class="form-control" name="phoneNumber" required maxlength="15">
                                         </div>
                                     </td>
                                 </tr>
+
                                 <tr>
                                     <td class="col-md-6">Favorite Place</td>
                                     <td class="col-md-6">
@@ -108,19 +86,22 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="col-md-6">Enter URL for the Favorite Place</td>
+                                    <td class="col-md-6">Favorite Place URL</td>
                                     <td class="col-md-6">
                                         <div class="form-group">
-                                            <input type="text" class="form-control" name="favoritePlaceURL" required>
+                                            <input type="url" class="form-control" name="favoritePlaceUrl" maxlength="50">
                                         </div>
                                     </td>
                                 </tr>
+
+
                                 <tr>
                                     <td class="col-md-6"></td>
                                     <td class="col-md-6">
                                         <input type="submit" value="Submit">
                                     </td>
                                 </tr>
+
                             </tbody>
                         </table>
                     </form>
@@ -130,16 +111,5 @@
         </div>
     </div>
 </body>
-<script>
-	   $(function() {
-      console.log("function()");
-
-      $.get("userLogin").done(function(response) {
-		  console.log(response);
-		  response = JSON.parse(response);
-        document.getElementById("userName").innerHTML = "Welcome " + response.login + "!";
-      });
-      });
-</script>
 
 </html>
