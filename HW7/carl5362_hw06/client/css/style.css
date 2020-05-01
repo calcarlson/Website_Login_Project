@@ -1,0 +1,19 @@
+h1 {
+    text-align: center !important;
+}
+
+p {
+    text-align: center !important;
+}
+
+ul {
+    text-align: center !important;
+}
+
+#ContactTable.thead {
+    text-align: center;
+}
+
+#error {
+    color: red;
+}
