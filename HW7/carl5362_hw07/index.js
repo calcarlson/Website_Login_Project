@@ -155,55 +155,48 @@ app.post('/updateUser', function(req, res) {
 });
 
 app.post("/sendLoginDetails", function(req, res) {
-    var bod = req.body;
-    var con = mysql.createConnection({
-        host: 'cse-larry.cse.umn.edu',
-        user: 'C4131S20U18', // replace with the database user provided to you
-        password: '354', // replace with the database password provided to you
-        database: 'C4131S20U18', // replace with the database user provided to you
-        port: '3306'
-    });
+var con = mysql.createConnection({
+    host: 'cse-larry.cse.umn.edu',
+    user: 'C4131S20U18', // replace with the database user provided to you
+    password: '354', // replace with the database password provided to you
+    database: 'C4131S20U18', // replace with the database user provided to you
+    port: '3306'
+});
+var username = req.body.username;
+var password = req.body.password;
 
-    con.connect(function(err) {
-        if (err) {
-            throw err;
-        }
-        var username = req.body.username;
-        var password = req.body.password;
-        if (username && password) {
-            con.query('SELECT * FROM tbl_accounts WHERE acc_login = ? AND acc_password = ?', [username, password], function(error, results, fields) {
-                console.log(username);
-                if (results.length > 0) {
-                    console.log("login: ", results[0].acc_id);
-                    currentId = results[0].acc_id;
-                    req.session.value = 1;
-                    res.redirect('/contact');
-                } else {
-                    res.send('/login');
-                }
-                res.end();
-            });
-        } else {
-            res.send('/login');
-            res.end();
-        }
-        //     for (var x = 0; x < result.length; x++) {
-        //         resu = result[x];
-        //         if (resu.acc_login == username && resu.acc_password == password) {
-        //             sess.value = 1;
+var sql = `SELECT acc_password FROM tbl_accounts WHERE acc_login = '${username}'`;
+con.query(sql, function(err, result) {
+    if (err) {
+        throw err;
+    }
+    var stored_password = result[0].acc_password;
+    if (stored_password === password) {
+        console.log("Password is correct");
+        req.session.username = username;
+        res.send('/contact');
+    } else {
+        console.log("Password is incorrect");
+        res.status(500).send('Error: Invalid credentials');
+    }
+});
+//     for (var x = 0; x < result.length; x++) {
+//         resu = result[x];
+//         if (resu.acc_login == username && resu.acc_password == password) {
+//             sess.value = 1;
 
-        //             sess.user_id = resu.acc_id;
-        //             user = resu.acc_login;
-        //             sess.save();
-        //             res.send('\contact');
-        //             res.end();
-        //         }
-        //     }
-        //     if (!req.session.value) {
-        //         res.write(JSON.stringify({ Stuff: false }));
-        //         res.end();
-        //     }
-    });
+//             sess.user_id = resu.acc_id;
+//             user = resu.acc_login;
+//             sess.save();
+//             res.send('\contact');
+//             res.end();
+//         }
+//     }
+//     if (!req.session.value) {
+//         res.write(JSON.stringify({ Stuff: false }));
+//         res.end();
+//     }
+});
 });
 
 
