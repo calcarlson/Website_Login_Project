@@ -154,9 +154,8 @@ app.post('/updateUser', function(req, res) {
 });
 
 app.post("/sendLoginDetails", function(req, res) {
-    var bod = req.body;
     var con = mysql.createConnection({
-        host: JSON.dbconfig.host[0],
+        host: 'cse-larry.cse.umn.edu',
         user: JSON.dbconfig.user[0], // replace with the database user provided to you
         password: JSON.dbconfig.password[0], // replace with the database password provided to you
         database: JSON.dbconfig.database[0], // replace with the database user provided to you
