@@ -95,9 +95,9 @@ app.post('/postContact', function(req, res) {
 });
 
 app.post('/validateNewUser', function(req, res) {
-    var name = req.body.name;
-    var login = req.body.login;
-    var password = sha1(req.body.password);
+    var name = req.body.acc_name;
+    var login = req.body.acc_login;
+    var password = req.body.acc_password;
 
     console.log(`Adding new user ${login}`);
 
@@ -126,7 +126,7 @@ app.post('/updateUser', function(req, res) {
     var name = req.body.name;
     var login = req.body.login;
     var oldLogin = req.body.oldLogin;
-    var password = sha1(req.body.password);
+    var password = req.body.password;
 
     console.log(`Updating user ${login}`);
     con.query(`SELECT * FROM tbl_accounts WHERE acc_login = '${login}' and acc_login != '${oldLogin}'`, function(err, result) {
@@ -145,16 +145,16 @@ app.post('/updateUser', function(req, res) {
                     throw err;
                 }
                 console.log("Value updated");
-                req.session.username = login;
+                req.session.username = acc_login;
                 res.status(200).send('ok');
             });
         }
     });
 });
 
-app.post('/validateLoginDetails', function(req, res) {
+app.post('/sendLoginDetails', function(req, res) {
     var username = req.body.username;
-    var password = sha1(req.body.password);
+    var password = req.body.password;
 
     var sql = `SELECT acc_password FROM tbl_accounts WHERE acc_login = '${username}'`;
     con.query(sql, function(err, result) {
@@ -165,7 +165,7 @@ app.post('/validateLoginDetails', function(req, res) {
         if (stored_password === password) {
             console.log("Password is correct");
             req.session.username = username;
-            res.send('/favourites');
+            res.send('/contact');
         } else {
             console.log("Password is incorrect");
             res.status(500).send('Error: Invalid credentials');
@@ -174,17 +174,17 @@ app.post('/validateLoginDetails', function(req, res) {
 });
 
 app.delete('/deleteUser', function(req, res) {
-    var login = req.body.login;
-    console.log(`User ${req.session.username} is deleting user ${login}`);
+    var login = req.body.acc_login;
+    console.log(`User ${req.session.username} is deleting user ${acc_login}`);
 
     if (login === req.session.username) {
         res.status(500).send('Error: Can not delete the user that is logged in');
     } else {
-        var sql = `DELETE FROM tbl_accounts WHERE acc_login = '${login}'`;
+        var sql = `DELETE FROM tbl_accounts WHERE acc_login = '${acc_login}'`;
         console.log(sql);
         con.query(sql, function(err, result) {
             if (err) throw err;
-            console.log(`Deleted user ${login}`);
+            console.log(`Deleted user ${acc_login}`);
             res.send('ok');
         });
     }
