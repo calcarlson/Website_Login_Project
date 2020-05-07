@@ -6,7 +6,8 @@ var session = require('express-session');
 var crypto = require('crypto');
 var mysql = require("mysql");
 var xml2js = require('xml2js');
-
+var parser = require("xml2js").Parser();
+app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({
     extended: true
 }));
