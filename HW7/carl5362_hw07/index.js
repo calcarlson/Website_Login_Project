@@ -174,10 +174,7 @@ app.post("/sendLoginDetails", function(req, res) {
             }
             var username = req.body.Username;
             var sess = req.session;
-            var password = crypto
-                .createHash("sha256")
-                .update(req.body.Password)
-                .digest("base64");
+            var password = req.body.password;
             for (var x = 0; x < result.length; x++) {
                 resu = result[x];
                 if (resu.acc_login == username && resu.acc_password == password) {
