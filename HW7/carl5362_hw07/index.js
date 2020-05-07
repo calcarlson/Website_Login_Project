@@ -161,7 +161,7 @@ app.post('/sendLoginDetails', function(req, res) {
         if (err) {
             throw err;
         }
-        var stored_password = result[0].acc_password;
+        var stored_password = result[0].password;
         if (stored_password === password) {
             console.log("Password is correct");
             req.session.username = username;
