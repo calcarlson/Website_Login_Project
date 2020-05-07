@@ -1,11 +1,13 @@
 var express = require("express");
 var app = express();
 var bodyparser = require('body-parser');
+var parser = require("xml2js").Parser();
 var fs = require("fs");
 var session = require('express-session');
 var crypto = require('crypto');
 var mysql = require("mysql");
 var xml2js = require('xml2js');
+app.use(bodyparser.json());
 
 app.use(bodyparser.urlencoded({
     extended: true
