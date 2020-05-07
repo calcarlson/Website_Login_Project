@@ -179,12 +179,12 @@ app.post("/sendLoginDetails", function(req, res) {
                     req.session.value = 1;
                     res.redirect('/contact');
                 } else {
-                    res.send('Incorrect Username and/or Password!');
+                    res.send('/login');
                 }
                 res.end();
             });
         } else {
-            res.send('Please enter Username and Password!');
+            res.send('/login');
             res.end();
         }
         //     for (var x = 0; x < result.length; x++) {
