@@ -168,49 +168,45 @@ app.post("/sendLoginDetails", function(req, res) {
         if (err) {
             throw err;
         }
-        con.query("SELECT * FROM tbl_accounts", function(err, result, fields) {
-            if (err) {
-                throw err;
-            }
-            var username = req.body.username;
-            var sess = req.session;
-            var password = req.body.password;
-            if (username && password) {
-                con.query('SELECT * FROM tbl_accounts WHERE acc_login = ? AND acc_password = ?', [username, password], function(error, results, fields) {
-                    console.log(username);
-                    if (results.length > 0) {
-                        console.log("login: ", results[0].acc_id);
-                        currentId = results[0].acc_id;
-                        req.session.value = 1;
-                        res.redirect('/contact');
-                    } else {
-                        res.send('Incorrect Username and/or Password!');
-                    }
-                    res.end();
-                });
-            } else {
-                res.send('Please enter Username and Password!');
+        var username = req.body.username;
+        var sess = req.session;
+        var password = req.body.password;
+        if (username && password) {
+            con.query('SELECT * FROM tbl_accounts WHERE acc_login = ? AND acc_password = ?', [username, password], function(error, results, fields) {
+                console.log(username);
+                if (results.length > 0) {
+                    console.log("login: ", results[0].acc_id);
+                    currentId = results[0].acc_id;
+                    req.session.value = 1;
+                    res.redirect('/contact');
+                } else {
+                    res.send('Incorrect Username and/or Password!');
+                }
                 res.end();
-            }
-            //     for (var x = 0; x < result.length; x++) {
-            //         resu = result[x];
-            //         if (resu.acc_login == username && resu.acc_password == password) {
-            //             sess.value = 1;
+            });
+        } else {
+            res.send('Please enter Username and Password!');
+            res.end();
+        }
+        //     for (var x = 0; x < result.length; x++) {
+        //         resu = result[x];
+        //         if (resu.acc_login == username && resu.acc_password == password) {
+        //             sess.value = 1;
 
-            //             sess.user_id = resu.acc_id;
-            //             user = resu.acc_login;
-            //             sess.save();
-            //             res.send('\contact');
-            //             res.end();
-            //         }
-            //     }
-            //     if (!req.session.value) {
-            //         res.write(JSON.stringify({ Stuff: false }));
-            //         res.end();
-            //     }
-        });
+        //             sess.user_id = resu.acc_id;
+        //             user = resu.acc_login;
+        //             sess.save();
+        //             res.send('\contact');
+        //             res.end();
+        //         }
+        //     }
+        //     if (!req.session.value) {
+        //         res.write(JSON.stringify({ Stuff: false }));
+        //         res.end();
+        //     }
     });
 });
+
 
 app.delete('/deleteUser', function(req, res) {
     var login = req.body.acc_login;
