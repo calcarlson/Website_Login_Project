@@ -6,8 +6,7 @@ var session = require('express-session');
 var crypto = require('crypto');
 var mysql = require("mysql");
 var xml2js = require('xml2js');
-var parser = require("xml2js").Parser();
-app.use(bodyparser.json());
+
 app.use(bodyparser.urlencoded({
     extended: true
 }));
@@ -154,12 +153,13 @@ app.post('/updateUser', function(req, res) {
 });
 
 app.post("/sendLoginDetails", function(req, res) {
+    var bod = req.body;
     var con = mysql.createConnection({
-        host: 'cse-larry.cse.umn.edu',
-        user: 'C4131S20U18', // replace with the database user provided to you
-        password: '354', // replace with the database password provided to you
-        database: 'C4131S20U18', // replace with the database user provided to you
-        port: 3306
+        host: json.dbconfig.host[0],
+        user: json.dbconfig.user[0], // replace with the database user provided to you
+        password: json.dbconfig.password[0], // replace with the database password provided to you
+        database: json.dbconfig.database[0], // replace with the database user provided to you
+        port: json.dbconfig.port[0]
     });
 
     con.connect(function(err) {
@@ -170,9 +170,12 @@ app.post("/sendLoginDetails", function(req, res) {
             if (err) {
                 throw err;
             }
-            var username = req.body.username;
+            var username = req.body.Username;
             var sess = req.session;
-            var password = req.body.password;
+            var password = crypto
+                .createHash("sha256")
+                .update(req.body.Password)
+                .digest("base64");
             for (var x = 0; x < result.length; x++) {
                 resu = result[x];
                 if (resu.acc_login == username && resu.acc_password == password) {
@@ -181,7 +184,7 @@ app.post("/sendLoginDetails", function(req, res) {
                     sess.user_id = resu.acc_id;
                     user = resu.acc_login;
                     sess.save();
-                    res.write(JSON.stringify({ Stuff: true }));
+                    res.send('\contact');
                     res.end();
                 }
             }
