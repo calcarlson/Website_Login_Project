@@ -153,8 +153,8 @@ app.post('/updateUser', function(req, res) {
 });
 
 app.post('/sendLoginDetails', function(req, res) {
-    var username = req.body.name;
-    var password = req.body.password;
+    var username = req.body.acc_name;
+    var password = req.body.acc_password;
 
     var sql = `SELECT acc_password FROM tbl_accounts WHERE acc_login = '${username}'`;
     con.query(sql, function(err, result) {
