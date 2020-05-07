@@ -169,7 +169,6 @@ app.post("/sendLoginDetails", function(req, res) {
             throw err;
         }
         var username = req.body.username;
-        var sess = req.session;
         var password = req.body.password;
         if (username && password) {
             con.query('SELECT * FROM tbl_accounts WHERE acc_login = ? AND acc_password = ?', [username, password], function(error, results, fields) {
