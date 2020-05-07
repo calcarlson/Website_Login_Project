@@ -152,24 +152,47 @@ app.post('/updateUser', function(req, res) {
     });
 });
 
-app.post('/sendLoginDetails', function(req, res) {
-    var username = req.body.name;
-    var password = req.body.password;
+app.post("/sendLoginDetails", function(req, res) {
+    var bod = req.body;
+    var con = mysql.createConnection({
+        host: json.dbconfig.host[0],
+        user: json.dbconfig.user[0], // replace with the database user provided to you
+        password: json.dbconfig.password[0], // replace with the database password provided to you
+        database: json.dbconfig.database[0], // replace with the database user provided to you
+        port: json.dbconfig.port[0]
+    });
 
-    var sql = `SELECT acc_password FROM tbl_accounts WHERE acc_login = '${username}'`;
-    con.query(sql, function(err, result) {
+    con.connect(function(err) {
         if (err) {
             throw err;
         }
-        var stored_password = result[0].acc_password;
-        if (stored_password === password) {
-            console.log("Password is correct");
-            req.session.username = username;
-            res.send('/contact');
-        } else {
-            console.log("Password is incorrect");
-            res.status(500).send('Error: Invalid credentials');
-        }
+        con.query("SELECT * FROM tbl_accounts", function(err, result, fields) {
+            if (err) {
+                throw err;
+            }
+            var username = req.body.username;
+            var sess = req.session;
+            var password = crypto
+                .createHash("sha256")
+                .update(req.body.Password)
+                .digest("base64");
+            for (var x = 0; x < result.length; x++) {
+                resu = result[x];
+                if (resu.acc_login == username && resu.acc_password == password) {
+                    sess.value = 1;
+
+                    sess.user_id = resu.acc_id;
+                    user = resu.acc_login;
+                    sess.save();
+                    res.write(JSON.stringify({ Stuff: true }));
+                    res.end();
+                }
+            }
+            if (!req.session.value) {
+                res.write(JSON.stringify({ Stuff: false }));
+                res.end();
+            }
+        });
     });
 });
 
