@@ -95,9 +95,9 @@ app.post('/postContact', function(req, res) {
 });
 
 app.post('/validateNewUser', function(req, res) {
-    var name = req.body.acc_name;
-    var login = req.body.acc_login;
-    var password = req.body.acc_password;
+    var name = req.body.name;
+    var login = req.body.login;
+    var password = req.body.password;
 
     console.log(`Adding new user ${login}`);
 
@@ -153,7 +153,7 @@ app.post('/updateUser', function(req, res) {
 });
 
 app.post('/sendLoginDetails', function(req, res) {
-    var username = req.body.username;
+    var username = req.body.name;
     var password = req.body.password;
 
     var sql = `SELECT acc_password FROM tbl_accounts WHERE acc_login = '${username}'`;
