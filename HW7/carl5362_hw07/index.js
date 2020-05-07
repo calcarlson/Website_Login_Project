@@ -155,76 +155,93 @@ app.post('/updateUser', function(req, res) {
 });
 
 app.post("/sendLoginDetails", function(req, res) {
-    var bod = req.body;
-    var con = mysql.createConnection({
-        host: 'cse-larry.cse.umn.edu',
-        user: 'C4131S20U18', // replace with the database user provided to you
-        password: '354', // replace with the database password provided to you
-        database: 'C4131S20U18', // replace with the database user provided to you
-        port: '3306'
-    });
+            var bod = req.body;
+            var con = mysql.createConnection({
+                host: 'cse-larry.cse.umn.edu',
+                user: 'C4131S20U18', // replace with the database user provided to you
+                password: '354', // replace with the database password provided to you
+                database: 'C4131S20U18', // replace with the database user provided to you
+                port: '3306'
+            });
 
-    con.connect(function(err) {
-        if (err) {
-            throw err;
-        }
-        con.query("SELECT * FROM tbl_accounts", function(err, result, fields) {
-            if (err) {
-                throw err;
-            }
-            var username = req.body.Username;
-            var sess = req.session;
-            var password = req.body.password;
-            for (var x = 0; x < result.length; x++) {
-                resu = result[x];
-                if (resu.acc_login == username && resu.acc_password == password) {
-                    sess.value = 1;
-
-                    sess.user_id = resu.acc_id;
-                    user = resu.acc_login;
-                    sess.save();
-                    res.send('\contact');
-                    res.end();
+            con.connect(function(err) {
+                if (err) {
+                    throw err;
                 }
-            }
-            if (!req.session.value) {
-                res.write(JSON.stringify({ Stuff: false }));
-                res.end();
-            }
-        });
-    });
-});
+                con.query("SELECT * FROM tbl_accounts", function(err, result, fields) {
+                    if (err) {
+                        throw err;
+                    }
+                    var username = req.body.username;
+                    var sess = req.session;
+                    var password = req.body.password;
+                    if (username && password) {
+                        con.query('SELECT * FROM tbl_accounts WHERE acc_login = ? AND acc_password = ?', [username, password], function(error, results, fields) {
+                            console.log(username);
+                            if (results.length > 0) {
+                                console.log("login: ", results[0].acc_id);
+                                currentId = results[0].acc_id;
+                                req.session.value = 1;
+                                res.redirect('/contact');
+                            } else {
+                                res.send('Incorrect Username and/or Password!');
+                            }
+                            res.end();
+                        });
+                    } else {
+                        res.send('Please enter Username and Password!');
+                        res.end();
+                    }
+                    //     for (var x = 0; x < result.length; x++) {
+                    //         resu = result[x];
+                    //         if (resu.acc_login == username && resu.acc_password == password) {
+                    //             sess.value = 1;
 
-app.delete('/deleteUser', function(req, res) {
-    var login = req.body.acc_login;
-    console.log(`User ${req.session.username} is deleting user ${acc_login}`);
+                    //             sess.user_id = resu.acc_id;
+                    //             user = resu.acc_login;
+                    //             sess.save();
+                    //             res.send('\contact');
+                    //             res.end();
+                    //         }
+                    //     }
+                    //     if (!req.session.value) {
+                    //         res.write(JSON.stringify({ Stuff: false }));
+                    //         res.end();
+                    //     }
+                    // });
+                });
+            });
 
-    if (login === req.session.username) {
-        res.status(500).send('Error: Can not delete the user that is logged in');
-    } else {
-        var sql = `DELETE FROM tbl_accounts WHERE acc_login = '${acc_login}'`;
-        console.log(sql);
-        con.query(sql, function(err, result) {
-            if (err) throw err;
-            console.log(`Deleted user ${acc_login}`);
-            res.send('ok');
-        });
-    }
-});
+            app.delete('/deleteUser', function(req, res) {
+                var login = req.body.acc_login;
+                console.log(`User ${req.session.username} is deleting user ${acc_login}`);
 
-app.get('/currentUser', function(req, res) {
-    if (req.session.username) {
-        res.send(req.session.username);
-    }
-})
+                if (login === req.session.username) {
+                    res.status(500).send('Error: Can not delete the user that is logged in');
+                } else {
+                    var sql = `DELETE FROM tbl_accounts WHERE acc_login = '${acc_login}'`;
+                    console.log(sql);
+                    con.query(sql, function(err, result) {
+                        if (err) throw err;
+                        console.log(`Deleted user ${acc_login}`);
+                        res.send('ok');
+                    });
+                }
+            });
 
-app.get('/logout', function(req, res) {
-    req.session.destroy();
-    res.redirect('/login');
-});
+            app.get('/currentUser', function(req, res) {
+                if (req.session.username) {
+                    res.send(req.session.username);
+                }
+            })
 
-app.use('/client', express.static(__dirname + '/client'));
+            app.get('/logout', function(req, res) {
+                req.session.destroy();
+                res.redirect('/login');
+            });
 
-app.get('*', function(req, res) {
-    res.sendFile(__dirname + '/client/404.html');
-});
+            app.use('/client', express.static(__dirname + '/client'));
+
+            app.get('*', function(req, res) {
+                res.sendFile(__dirname + '/client/404.html');
+            });
