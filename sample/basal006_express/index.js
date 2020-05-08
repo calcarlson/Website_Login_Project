@@ -248,21 +248,18 @@ function passwordValidate(req, res) {
     console.log("password:");
     console.log(password);
 
-    if (username && password) {
-        con.query('SELECT * FROM tbl_accounts WHERE acc_login = ? AND acc_password = ?', [username, password], function(error, results, fields) {
-            console.log(username);
-            if (results.length > 0) {
-                console.log("login: ", results[0].acc_id);
-                currentId = results[0].acc_id;
-                req.session.value = 1;
-                res.redirect('/contact');
-            } else {
-                res.send('Incorrect Username and/or Password!');
-            }
-            res.end();
-        });
-    } else {
-        res.send('Please enter Username and Password!');
+
+    con.query('SELECT * FROM tbl_accounts WHERE acc_login = ? AND acc_password = ?', [username, password], function(error, results, fields) {
+        console.log(username);
+        if (results.length > 0) {
+            console.log("login: ", results[0].acc_id);
+            currentId = results[0].acc_id;
+            req.session.value = 1;
+            res.redirect('/contact');
+        } else {
+            res.send('Incorrect Username and/or Password!');
+        }
         res.end();
-    }
+    });
+
 };
