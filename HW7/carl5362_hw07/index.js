@@ -69,6 +69,7 @@ app.get('/login', function(req, res) {
     res.sendFile(__dirname + '/client/login.html');
 });
 app.get('/logout', function(req, res) {
+    loginCheck = false;
     req.session.destroy();
     loginCheck = false, res.redirect('/login');
 });
@@ -182,7 +183,8 @@ app.post("/sendLoginDetails", function(req, res) {
                 currentUser = result.acc_name;
                 currentLogin = result.acc_login;
                 console.log("redirecting to contact page");
-                res.redirect("contact");
+                res.redirect("/client/contact.html");
+                res.end;
             } else {
                 console.log("Username or Password is incorrect");
                 res.status(500).send('Error: Invalid credentials');
