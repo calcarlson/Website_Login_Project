@@ -8,6 +8,7 @@ var crypto = require('crypto');
 var path = require('path');
 var mysql = require("mysql");
 var xml2js = require('xml2js');
+var loginCheck = false;
 app.use(bodyparser.json());
 
 app.use(bodyparser.urlencoded({
@@ -37,7 +38,7 @@ fs.readFile(__dirname + '/dbconfig.xml', function(err, data) {
 });
 
 app.get('/Admin', function(req, res) {
-    if (!req.session.username) {
+    if (!loginCheck) {
         res.redirect('/login');
     } else {
         res.sendFile(__dirname + '/client/adminpage.html');
@@ -45,22 +46,22 @@ app.get('/Admin', function(req, res) {
 });
 
 app.get('/', function(req, res) {
-    if (!req.session.authenticated) {
+    if (!loginCheck) {
         res.redirect('/client/welcome.html');
     } else { res.sendFile(__dirname + '/client/welcome.html'); }
 });
 app.get('/contact', function(req, res) {
-    if (!req.session.authenticated) {
+    if (!loginCheck) {
         res.redirect('/login');
     } else { res.sendFile(__dirname + '/client/contact.html'); }
 });
 app.get('/addContact', function(req, res) {
-    if (!req.session.authenticated) {
+    if (!loginCheck) {
         res.redirect('/login');
     } else { res.sendFile(__dirname + '/client/addContact.html'); }
 });
 app.get('/stock', function(req, res) {
-    if (!req.session.authenticated) {
+    if (!loginCheck) {
         res.redirect('/login');
     } else { res.sendFile(__dirname + '/client/stock.html'); }
 });
@@ -69,7 +70,7 @@ app.get('/login', function(req, res) {
 });
 app.get('/logout', function(req, res) {
     req.session.destroy();
-    req.session.authenticated = false, res.redirect('/login');
+    loginCheck = false, res.redirect('/login');
 });
 app.get('/getContacts', function(req, res) {
     var sql = 'SELECT * FROM tbl_contacts';
@@ -177,10 +178,10 @@ app.post("/sendLoginDetails", function(req, res) {
 
             if (passCheck && userCheck) {
                 console.log("Succesful Login");
-                req.session.authenticated = true;
+                loginCheck = true;
                 currentUser = result.acc_name;
                 currentLogin = result.acc_login;
-                res.send("/contact");
+                res.redirect("/contact");
             } else {
                 console.log("Username or Password is incorrect");
                 res.status(500).send('Error: Invalid credentials');
