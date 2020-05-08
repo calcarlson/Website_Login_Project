@@ -177,7 +177,7 @@ app.post("/sendLoginDetails", function(req, res) {
 
             if (passCheck && userCheck) {
                 console.log("Succesful Login");
-                loginSuccess = true;
+                req.session.authenticated = true;
                 currentUser = result.acc_name;
                 currentLogin = result.acc_login;
                 res.redirect("/contact");
