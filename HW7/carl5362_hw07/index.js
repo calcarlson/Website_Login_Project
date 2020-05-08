@@ -167,19 +167,24 @@ app.post("/sendLoginDetails", function(req, res) {
     var username = req.body.username;
     var password = req.body.password;
 
-    var sql = `SELECT acc_password FROM tbl_accounts WHERE acc_login = '${username}'`;
-    con.query(sql, function(err, result) {
-        if (err) {
-            throw err;
-        }
-        var stored_password = result[0];
-        if (stored_password === password) {
-            console.log("Password is correct");
-            req.session.username = username;
-            res.send('/contact');
-        } else {
-            console.log("Password is incorrect");
-            res.status(500).send('Error: Invalid credentials');
+    con.query("SELECT * FROM tbl_accounts", function(err, results, fields) {
+        if (err) throw err;
+
+        for (result of results) {
+            var hashedInput = crypto.createHash('sha256').update(password).digest('base64');
+            var passCheck = hashedInput == result.acc_password;
+            var userCheck = username == result.acc_login;
+
+            if (passCheck && userCheck) {
+                console.log("Succesful Login");
+                loginSuccess = true;
+                currentUser = result.acc_name;
+                currentLogin = result.acc_login;
+                res.redirect("/contact");
+            } else {
+                console.log("Username or Password is incorrect");
+                res.status(500).send('Error: Invalid credentials');
+            }
         }
     });
     //     for (var x = 0; x < result.length; x++) {
