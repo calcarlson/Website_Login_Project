@@ -1,0 +1,142 @@
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    </head>
+    <style>
+        .hidden_text {
+            display: none;
+        }
+        .loginForm {
+		    width: 80%;
+	    }
+        .login_box {
+		    text-align: center;
+	    }
+		.errorFormat{
+			background-color: red;
+			display: none;
+			width: 80%;
+			text-align: center;
+		}
+    </style>
+    <body>
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <ul class="nav navbar-nav">
+                    <li><a href="/"><b>Home</b></a></li>
+                    <li><a href="/contact"><b>Contact</b></a></li>
+                    <li><a href="/addContact"><b>Add Contact</b></a></li>
+                    <li><a href="/stock"><b>Stock Page</b></a></li>
+                    <li><a href="/logout"><b>Logout</b></a></li>
+                    <li><a href="/admin"><b>Admin</b></a></li>
+                </ul>
+            </div>
+        </nav>
+        <br><br>
+
+        <button onclick = "addContact()"></button>
+        <div class = "hidden_text">
+            <form class="login_box" name="login" >
+                <div>
+                    <label for="uname" class = "text"><b>Name:</b></label>
+                    <br>
+                    <input type="text" placeholder="Enter Name" name="name" class = "loginForm" required>
+                </div>
+                <br><br>
+                <div>
+                    <label for="uname" class = "text"><b>New Username:</b></label>
+                    <br>
+                    <input type="text" placeholder="Enter Username" name="uname" class = "loginForm" required>
+                </div>
+                <br><br>
+                <div>
+                    <label for="psw" class = "text"><b>Password</b></label>
+                    <br>
+                    <input type="password" placeholder="Enter Password" name="psw" class = "loginForm" required>
+                </div>
+                    <br>
+                    <input type="button" class = "loginForm" value = "Add User" onclick = "sendToServer(name.value, uname.value, psw.value)">
+                    <br>
+                    <input type="button" class = "loginForm" value = "Cancel" onclick = "cancelEntry()">
+            </form>
+        </div>
+
+        <div id="error" class = "errorFormat">Thats wrong Bro</div>
+        <div class="container">
+            <table class="table" id="accountTable">
+                <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Login</th>
+                        <th scope="col">New Password</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        <script type="text/javascript">
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    if (this.responseText == "Wrong" || this.responseText == "Right") {
+                        evaluate(this.responseText);
+                    }
+                    else {
+                        var data = JSON.parse(this.responseText);  
+                        console.log(data)          
+                        addTable(data);
+                    }
+                }
+            };
+            xhttp.open("GET", "/getListOfUsers", true);
+            xhttp.send();
+    
+            function addTable(data) {
+                for(var i = 0; i < data.account.length; i++) {
+                    var ID = JSON.stringify(data.account[i].ID);
+                    var name = JSON.stringify(data.account[i].Name).slice(1,-1);
+                    var login = JSON.stringify(data.account[i].Login).slice(1,-1);
+                    var password = JSON.stringify(data.account[i].NewPassword).slice(1,-1);
+                          console.log(data);
+                    var button = "<td><button type=\"button\" onclick=\"deleteAccount()\">delete!</button></td>";
+                    var tblRow = "<tr>" + "<td>" + ID + "</td>" + "<td>" + name + "</td>" + "<td>" + login + "</td>" + "<td>" + password + "</td>"  + button + "</tr>";
+                    document.getElementById("accountTable").innerHTML += tblRow;
+                }
+            }
+            function deleteAccount() {
+                xhttp.open("POST", "/deleteUsers", true);
+                xhttp.setRequestHeader("Content-Type", "application/json");
+                xhttp.send(JSON.stringify({ID: 3}));
+            }
+            function evaluate(data) {
+                if(data == "Right") {
+                    location.replace("/admin");
+                }
+                else if (data == "Wrong") {
+                    document.getElementById("error").style.display = "block";
+                }
+            }
+            function sendToServer(name, userName, password){
+                xhttp.open("POST", "/postUser", true);
+                xhttp.send(JSON.stringify({Name: name, Username: userName, Password: password}));
+            }
+            function cancelEntry() {
+                document.getElementsByName("name").value = "";
+                document.getElementsByName("uname").value = "";
+                document.getElementsByName("psw").value = "";
+                document.getElementByClass("hidden_text").style.display = "none";
+            }
+            function addContact(){
+                document.getElementByClass("hidden_text").style.display = "block";
+            }
+        </script>
+    </body>
+    
+    </html>
+    

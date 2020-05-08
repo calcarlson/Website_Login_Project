@@ -1,0 +1,111 @@
+ <html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<style>
+      navbar {
+        background-color: #563d7c;
+      }
+      .navbar-default .navbar-nav li a{
+        color: #eee;
+      }
+      .navbar-default .navbar-nav li a:hover{
+        color: white;
+      }
+      th, td{
+        text-align: center;
+      }
+      thead {
+        background-color: #e57373;
+    color: white;
+      }
+
+       p {
+          display: block;
+          color: white;
+          text-align: center;
+          padding: 10px;
+          text-decoration: underline;
+          float: right;
+          font-weight: bold;
+      }
+	</style>
+</head>
+
+<body>
+   <nav class="navbar navbar-default">
+        <div class="container-fluid">
+          <ul class="nav navbar-nav">
+              <li><a href="/"><b>Home</b></a></li>
+              <li><a href="/contact"><b>Contact</b></a></li>
+              <li><a href="/addContact"><b>Add Contact</b></a></li>
+              <li><a href="/stock"><b>Stock Page</b></a></li>
+              <li><a href="/admin"><b>Admin</b></a></li>
+              <li><a href="/logout">
+                  <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+                  </a>
+              </li>
+
+          </ul>
+
+              <p id="userName">Welcome</p>
+
+        </div>
+    </nav>
+	<br><br>
+	<div class="container">
+		<table class="table" id="contactTable">
+			<thead>
+				<tr>
+					<th scope="col">Name</th>
+					<th scope="col">Email</th>
+					<th scope="col">Address</th>
+					<th scope="col">Phone Number</th>
+					<th scope="col">Favorite Place</th>
+				</tr>
+			</thead>
+			<tbody></tbody>
+		</table>
+	</div>
+	<script type="text/javascript">
+		var url = '../contact.json';
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                var data = JSON.parse(this.responseText);            
+                addTable(data);
+            }
+        };
+        xhttp.open("GET", "/getListOfContacts", true);
+        xhttp.send();
+
+        function addTable(data) {
+            var i = 0;
+            for(i = 0; i < data.contact.length; i++) {
+                var name = JSON.stringify(data.contact[i].name).slice(1,-1);
+                var email = JSON.stringify(data.contact[i].email).slice(1,-1);
+                var address = JSON.stringify(data.contact[i].address).slice(1,-1);
+                var phoneNumber = JSON.stringify(data.contact[i].phoneNumber).slice(1,-1);
+                var place = JSON.stringify(data.contact[i].favoritePlace).slice(1,-1);
+                      console.log(data);
+                var URL = JSON.stringify(data.contact[i].favoritePlaceURL).slice(1,-1);
+                var tblRow = "<tr>" + "<td>" + name + "</td>" + "<td>" + email + "</td>" + "<td>" + address + "</td>" + "<td>" + phoneNumber + "</td>" + "<td><a href=\"" + URL + "\">" + place + "<a></td>" + "</tr>";
+                document.getElementById("contactTable").innerHTML += tblRow;
+            }
+        }
+        $(function() {
+			console.log("function()");
+		  $.get("userLogin").done(function(response) {
+			  console.log(response);
+			  response = JSON.parse(response);
+			document.getElementById("userName").innerHTML = "Welcome " + response.login + "!";
+		  });
+      });
+	</script>
+</body>
+
+</html>

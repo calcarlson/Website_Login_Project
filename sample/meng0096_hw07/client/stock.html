@@ -1,0 +1,167 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style>
+      .navbar {
+        background-color: #563d7c;
+      }
+      .navbar-default .navbar-nav li a{
+        color: #eee;
+      }
+      .navbar-default .navbar-nav li a:hover{
+        color: white;
+      }
+      th, td{
+        text-align: center;
+      }
+      thead {
+        background-color: #e57373;
+    color: white;
+      }
+
+       p {
+          display: block;
+          color: white;
+          text-align: center;
+          padding: 10px;
+          text-decoration: underline;
+          float: right;
+          font-weight: bold;
+      }
+    </style>
+</head>
+
+<body>
+   <nav class="navbar navbar-default">
+        <div class="container-fluid">
+          <ul class="nav navbar-nav">
+              <li><a href="/"><b>Home</b></a></li>
+              <li><a href="/contact"><b>Contact</b></a></li>
+              <li><a href="/addContact"><b>Add Contact</b></a></li>
+              <li><a href="/stock"><b>Stock Page</b></a></li>
+              <li><a href="/admin"><b>Admin</b></a></li>
+              <li><a href="/logout">
+                  <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+                  </a>
+              </li>
+
+          </ul>
+
+              <p id="userName">Welcome</p>
+
+        </div>
+    </nav><br><br><br>
+    <div class="container">
+        <div class="panel panel-default">
+            <div class="panel-body"><center>Welcome to Stock Page</center></div>
+        </div>
+    </div>
+    <div class="container">
+
+
+        <div class="row">
+            <div class="col">
+                <table class="table table-bordered table-hover">
+                    <tbody>
+                        <tr>
+                            <td class="col-md-6">Company</td>
+                            <td class="col-md-6">
+                                <div class="form-group">
+                                    <select name="Company" id = "list">
+                                        <option value="MSFT">Microsoft</option>
+                                        <option value="BA">Boeing Company</option>
+                                        <option value="AAPL">Apple Inc</option>
+                                        <option value="AMZN">Amazon</option>
+                                        <option value="NVDA">NVIDIA Corporation</option>
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <button type="button" id = "button">Get Data</button>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+    <div class="container">
+        <table class="table" id="StockData" style="white-space:pre-wrap; word-wrap:break-word">
+            <thead>
+                <tr>
+                    <th scope="col">Company-MetaData</th>
+                    <th scope="col">Stock-Info</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+
+    <script>
+        //https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=IBM&interval=5min&outputsize=full&apikey=U5X79KK14UJT6NT9
+    // TODO: Hit the TIME_SERIES_DAILY endpoint of the alphavantage API for the company that was selected in the dropdown.Display the Json data
+        var theURL = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol="
+        var last = "&interval=5min&outputsize=full&apikey=U5X79KK14UJT6NT9";
+        $('#button').click(function(){
+            var x = document.getElementById("list");
+            var symbol = (x.options[x.selectedIndex].value).toString();
+            var URL = theURL + symbol + last;
+            console.log(URL);
+            doAjax(URL);
+                return false;
+        });
+        function doAjax(url) {
+            $.ajax({
+                url: url,
+                dataType: 'json',
+                contentType: "application/json",
+                success: function(data) {
+                    var x = 0;
+                    var tblRow = "";
+                    var timeInit = data['Time Series (Daily)'];
+                    var firstrow = "<tr><th scope=\"col\">Company-MetaData</th><th scope=\"col\">Stock-Info</th></tr>";
+                    var metadata = data['Meta Data'];
+                    var meta = "1. Information: " + metadata['1. Information'] + "\n" + "2. Symbol: " + metadata['2. Symbol'] + "\n" + "3. Last Refreshed: " + metadata['3. Last Refreshed'] + "\n" + "4. Output Size: " + metadata['4. Output Size'] + "\n" + "5. Time Zone: " + metadata['5. Time Zone'];
+                    document.getElementById("StockData").innerHTML = firstrow;
+                    for(var tempData in timeInit)
+                    {   
+                        times = timeInit[tempData];
+                        console.log(tempData)
+                        var times2 = tempData + "\n" + "1. open: " + times['1. open'] + "\n" + "2. high: " + times['2. high'] + "\n" + "3. low: " + times['3. low'] + "\n" +  "4. close: " + times['4. close'] + "\n" + "5. volume: " + times['5. volume'];
+                        if (x == 0){
+                            tblRow = "<tr>" + "<td>" + meta + "</td>" + "<td>" + times2 + "</td>"  + "</tr>";
+                            x ++;
+                        }
+                        else {
+                            tblRow = "<tr>" + "<td></td>" + "<td>" + times2 + "</td>"  + "</tr>";
+                        }
+                        x ++;
+                        document.getElementById("StockData").innerHTML += tblRow;4
+                        if (x >= 50) {
+                            break;
+                        }
+                    }
+                }
+            });
+        }
+	   $(function() {
+		  console.log("function()");
+		  $.get("userLogin").done(function(response) {
+			  console.log(response);
+			  response = JSON.parse(response);
+			document.getElementById("userName").innerHTML = "Welcome " + response.login + "!";
+		  });
+      });
+   </script>
+</body>
+</html>
