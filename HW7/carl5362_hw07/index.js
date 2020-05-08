@@ -181,7 +181,8 @@ app.post("/sendLoginDetails", function(req, res) {
                 loginCheck = true;
                 currentUser = result.acc_name;
                 currentLogin = result.acc_login;
-                res.redirect("/contact");
+                console.log("redirecting to contact page");
+                res.redirect("contact");
             } else {
                 console.log("Username or Password is incorrect");
                 res.status(500).send('Error: Invalid credentials');
