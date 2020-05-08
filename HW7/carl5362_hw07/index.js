@@ -5,6 +5,7 @@ var parser = require("xml2js").Parser();
 var fs = require("fs");
 var session = require('express-session');
 var crypto = require('crypto');
+var path = require('path');
 var mysql = require("mysql");
 var xml2js = require('xml2js');
 app.use(bodyparser.json());
@@ -18,6 +19,7 @@ app.use(session({
     saveUninitialized: true,
     resave: false
 }));
+app.use(express.static('carl5362_hw07'));
 
 app.listen(9362, () => console.log('Listening on port 9362!'));
 
@@ -170,7 +172,7 @@ app.post("/sendLoginDetails", function(req, res) {
         if (err) {
             throw err;
         }
-        var stored_password = result[0].acc_password;
+        var stored_password = result[0];
         if (stored_password === password) {
             console.log("Password is correct");
             req.session.username = username;
