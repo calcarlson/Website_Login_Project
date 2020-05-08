@@ -258,6 +258,7 @@ function passwordValidate(req, res) {
             res.redirect('/contact');
         } else {
             res.send('Incorrect Username and/or Password!');
+            res.send('/login')
         }
         res.end();
     });
