@@ -134,11 +134,11 @@ app.get("/getListOfContacts", function(req, res) {
 // POST method to insert details of a new contact to tbl_contacts table
 app.post("/postContact", function(req, res) {
     var con = mysql.createConnection({
-        host: json.dbconfig.host[0],
-        user: json.dbconfig.user[0], // replace with the database user provided to you
-        password: json.dbconfig.password[0], // replace with the database password provided to you
-        database: json.dbconfig.database[0], // replace with the database user provided to you
-        port: json.dbconfig.port[0]
+        host: 'hcse-larry.cse.umn.edu',
+        user: 'C4131S20U18', // replace with the database user provided to you
+        password: '354', // replace with the database password provided to you
+        database: 'C4131S20U18', // replace with the database user provided to you
+        port: 3306
     });
     con.connect(function(err) {
         if (err) {
@@ -241,11 +241,11 @@ app.get("/userLogin", function(req, res) {
 
 app.post("/updateUsers", function(req, res) {
     var con = mysql.createConnection({
-        host: json.dbconfig.host[0],
-        user: json.dbconfig.user[0], // replace with the database user provided to you
-        password: json.dbconfig.password[0], // replace with the database password provided to you
-        database: json.dbconfig.database[0], // replace with the database user provided to you
-        port: json.dbconfig.port[0]
+        host: 'hcse-larry.cse.umn.edu',
+        user: 'C4131S20U18', // replace with the database user provided to you
+        password: '354', // replace with the database password provided to you
+        database: 'C4131S20U18', // replace with the database user provided to you
+        port: 3306
     });
     con.connect(function(err) {
         if (err) {
@@ -305,11 +305,11 @@ app.post("/deleteUsers", function(req, res) {
         res.send({ flag: false });
     } else {
         var con = mysql.createConnection({
-            host: json.dbconfig.host[0],
-            user: json.dbconfig.user[0], // replace with the database user provided to you
-            password: json.dbconfig.password[0], // replace with the database password provided to you
-            database: json.dbconfig.database[0], // replace with the database user provided to you
-            port: json.dbconfig.port[0]
+            host: 'hcse-larry.cse.umn.edu',
+            user: 'C4131S20U18', // replace with the database user provided to you
+            password: '354', // replace with the database password provided to you
+            database: 'C4131S20U18', // replace with the database user provided to you
+            port: 3306
         });
 
         con.connect(function(err) {
@@ -380,11 +380,11 @@ app.post("/postUser", function(req, res) {
 
 app.get("/getListOfUsers", function(req, res) {
     var con = mysql.createConnection({
-        host: json.dbconfig.host[0],
-        user: json.dbconfig.user[0], // replace with the database user provided to you
-        password: json.dbconfig.password[0], // replace with the database password provided to you
-        database: json.dbconfig.database[0], // replace with the database user provided to you
-        port: json.dbconfig.port[0]
+        host: 'hcse-larry.cse.umn.edu',
+        user: 'C4131S20U18', // replace with the database user provided to you
+        password: '354', // replace with the database password provided to you
+        database: 'C4131S20U18', // replace with the database user provided to you
+        port: 3306
     });
     con.connect(function(err) {
         if (err) {
