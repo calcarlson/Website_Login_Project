@@ -103,7 +103,7 @@ app.post('/postContact', function(req, res) {
 app.post('/validateNewUser', function(req, res) {
     var name = req.body.name;
     var login = req.body.login;
-    var password = req.body.password;
+    var password = crypto.createHash('sha256').update(password).digest('base64');
 
     console.log(`Adding new user ${login}`);
 
@@ -132,7 +132,7 @@ app.post('/updateUser', function(req, res) {
     var name = req.body.name;
     var login = req.body.login;
     var oldLogin = req.body.oldLogin;
-    var password = req.body.password;
+    var password = crypto.createHash('sha256').update(password).digest('base64');
 
     console.log(`Updating user ${login}`);
     con.query(`SELECT * FROM tbl_accounts WHERE acc_login = '${login}' and acc_login != '${oldLogin}'`, function(err, result) {
@@ -167,7 +167,7 @@ app.post("/sendLoginDetails", function(req, res) {
         port: '3306'
     });
     var username = req.body.username;
-    var password = req.body.password;
+    var password = crypto.createHash('sha256').update(password).digest('base64');
 
     con.query("SELECT * FROM tbl_accounts", function(err, results, fields) {
         if (err) throw err;
@@ -191,22 +191,6 @@ app.post("/sendLoginDetails", function(req, res) {
             }
         }
     });
-    //     for (var x = 0; x < result.length; x++) {
-    //         resu = result[x];
-    //         if (resu.acc_login == username && resu.acc_password == password) {
-    //             sess.value = 1;
-
-    //             sess.user_id = resu.acc_id;
-    //             user = resu.acc_login;
-    //             sess.save();
-    //             res.send('\contact');
-    //             res.end();
-    //         }
-    //     }
-    //     if (!req.session.value) {
-    //         res.write(JSON.stringify({ Stuff: false }));
-    //         res.end();
-    //     }
 });
 
 
